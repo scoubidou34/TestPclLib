@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/tom/Documents/TomCodeliteWs/testpcl",
+  "command": "/usr/bin/c++  -DDISABLE_LIBUSB_1_0 -DDISABLE_PCAP -DDISABLE_PNG -DH5_BUILT_AS_DYNAMIC_LIB -Dqh_QHpointer -DvtkRenderingContext2D_AUTOINIT=\"1(vtkRenderingContextOpenGL2)\" -DvtkRenderingCore_AUTOINIT=\"3(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingOpenGL2)\" -isystem /usr/local/include/vtk-8.2 -isystem /usr/local/include/pcl-1.10 -isystem /usr/include/eigen3 -isystem /usr/local/include/vtk-8.2/vtkogg/include    -g   -march=native -msse4.2 -mfpmath=sse -std=gnu++14 -o CMakeFiles/pcltest.dir/src/main.cpp.o -c /home/tom/Documents/TomCodeliteWs/testpcl/src/main.cpp",
+  "file": "/home/tom/Documents/TomCodeliteWs/testpcl/src/main.cpp"
+}
+]

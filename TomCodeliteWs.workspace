@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="TomCodeliteWs" Database="" Version="10000">
   <Project Name="testpcl" Path="testpcl/testpcl.project" Active="Yes"/>
+  <Project Name="testPCLDll" Path="testPCLDll/testPCLDll.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
       <Project Name="testpcl" ConfigName="Debug"/>
+      <Project Name="testPCLDll" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
+    <WorkspaceConfiguration Name="Release" Selected="no">
       <Environment/>
-      <Project Name="testpcl" ConfigName="Debug"/>
+      <Project Name="testpcl" ConfigName="Release"/>
+      <Project Name="testPCLDll" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
