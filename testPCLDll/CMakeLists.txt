@@ -7,7 +7,26 @@ project(testPCLDll)
 # This setting is useful for providing JSON file used by CodeLite for code completion
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-set(CONFIGURATION_NAME Debug)
+# Compiler options
+# Compiler options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CONFIGURATION_NAME Debug)
+    add_definitions(-g)
+    add_definitions(-O0)
+    add_definitions(-Wall)
+    set_source_files_properties(
+    ${CXX_SRCS} PROPERTIES COMPILE_FLAGS 
+    " -g")
+else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CONFIGURATION_NAME Release)
+    add_definitions(-O2)
+    add_definitions(-Wall)
+    add_definitions(-DNDEBUG)
+    set_source_files_properties(
+    ${CXX_SRCS} PROPERTIES COMPILE_FLAGS 
+    " -O2")
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+message( ${CONFIGURATION_NAME})
 
 set(CL_WORKSPACE_DIRECTORY ..)
 # Set default locations
@@ -51,8 +70,6 @@ link_directories(${VTK_LIBRARIES})
 
 
 
-# Compiler options
-add_definitions(-g)
 
 # Linker options
 
@@ -71,9 +88,7 @@ set ( CXX_SRCS
     ${CMAKE_CURRENT_LIST_DIR}/PclRendererImpl.cpp
 )
 
-set_source_files_properties(
-    ${CXX_SRCS} PROPERTIES COMPILE_FLAGS 
-    " -g")
+
 
 
 
@@ -85,7 +100,8 @@ set_source_files_properties(
 add_library(testPCLDll SHARED ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
 target_link_libraries(testPCLDll ${LINK_OPTIONS})
 target_link_libraries(testPCLDll ${Boost_LIBRARIES})
-
+target_link_libraries (testPCLDll ${PCL_LIBRARIES})
+target_link_libraries (testPCLDll ${VTK_LIBRARIES})
 
 #{{{{ User Code 3
 # Place your code here

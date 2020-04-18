@@ -9,7 +9,7 @@
 #include <vtkActor.h>
 #include <vtkCamera.h>
 #include <vtkPNGWriter.h>
-
+#include <vtkWindowToImageFilter.h> 
 #include <vtkRenderLargeImage.h>
 
 #include <vtkRenderWindowInteractor.h>
@@ -92,11 +92,15 @@ void PclRendererImpl::RenderOffScreen()
 {
     m_renderWindow->SetSize(m_width, m_height);
     m_renderWindow->SetOffScreenRendering(1);
-    vtkSmartPointer<vtkRenderLargeImage> renderLarge = vtkSmartPointer<vtkRenderLargeImage>::New();
+   /* vtkSmartPointer<vtkRenderLargeImage> renderLarge = vtkSmartPointer<vtkRenderLargeImage>::New();
     renderLarge->SetInput(m_renderer);
+     * */
+    vtkSmartPointer<vtkWindowToImageFilter> renderLarge = vtkSmartPointer<vtkWindowToImageFilter>::New();
+    renderLarge->SetInput(m_renderWindow);
+    
     vtkSmartPointer<vtkPNGWriter> pImageWriter = vtkSmartPointer<vtkPNGWriter>::New();
     //pImageWriter->SetInput(pWindowImageFilter->GetOutput());
-    pImageWriter->SetFileName("coons_image.png");
+    pImageWriter->SetFileName("image.png");
     pImageWriter->SetInputConnection(renderLarge->GetOutputPort());
     pImageWriter->Write();
 }

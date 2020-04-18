@@ -14,7 +14,7 @@
 
 
 
-class PclRendererImpl : public PclRendererInterface {
+struct PclRendererImpl : public PclRendererInterface {
     
 public:
 PclRendererImpl(): m_ptsCloud(vtkSmartPointer<vtkPoints>::New()),
@@ -30,7 +30,8 @@ PclRendererImpl(): m_ptsCloud(vtkSmartPointer<vtkPoints>::New()),
     bool InitRenderer();
     virtual void Render()override;
     virtual void RenderOffScreen()override;
-    bool LoadPcdFile(const std::string&)override;
+    virtual bool LoadPcdFile(const std::string&)override;
+    virtual std::string GetVersion()const override{return "1.0";}
     
 private:
     vtkSmartPointer<vtkPoints> m_ptsCloud;
