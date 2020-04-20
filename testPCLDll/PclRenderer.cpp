@@ -39,4 +39,9 @@ void Render(PclRendererInterface* _obj){
 void RenderOffScreen(PclRendererInterface* _obj){
     _obj->RenderOffScreen();
 }
+
+void MoveCamera(PclRendererInterface* _obj,int _x,int _y){
+    _obj->MoveCamera(_x,_y);
+}
+ 
  

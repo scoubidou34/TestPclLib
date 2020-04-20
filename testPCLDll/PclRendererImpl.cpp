@@ -88,7 +88,7 @@ void PclRendererImpl::Render()
     interactor->Start();
 }
 
-void PclRendererImpl::RenderOffScreen()
+void PclRendererImpl::RenderOffScreen(const std::string& _imgName)
 {
     m_renderWindow->SetSize(m_width, m_height);
     m_renderWindow->SetOffScreenRendering(1);
@@ -100,7 +100,21 @@ void PclRendererImpl::RenderOffScreen()
     
     vtkSmartPointer<vtkPNGWriter> pImageWriter = vtkSmartPointer<vtkPNGWriter>::New();
     //pImageWriter->SetInput(pWindowImageFilter->GetOutput());
-    pImageWriter->SetFileName("image.png");
+    pImageWriter->SetFileName(_imgName.c_str());
     pImageWriter->SetInputConnection(renderLarge->GetOutputPort());
     pImageWriter->Write();
+}
+
+void PclRendererImpl::MoveCamera(double _shiftX,double _shiftY){
+    vtkCamera *ptrCamera=m_renderer->GetActiveCamera ();
+    assert(ptrCamera);
+    double pos[3];
+    ptrCamera->GetPosition(pos);
+    std::cout<<pos[0]<<" "<<pos[1]<<" "<<pos[2]<<std::endl;
+    pos[0]+=_shiftX;
+    pos[1]+=_shiftY;
+    ptrCamera->Roll(pos[0]);
+    ptrCamera->Yaw(0);
+    RenderOffScreen();
+    //return true;
 }
