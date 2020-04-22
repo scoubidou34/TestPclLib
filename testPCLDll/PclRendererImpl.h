@@ -29,7 +29,8 @@ PclRendererImpl(): m_ptsCloud(vtkSmartPointer<vtkPoints>::New()),
     bool Creategeometry(const pcl::PointCloud<pcl::PointXYZ>& _pcdData);
     bool InitRenderer();
     virtual void Render()override;
-    virtual void RenderOffScreen(const std::string& _imgName="image.png")override;
+    virtual void RenderOffScreen(const std::string& _imgName="/run/user/1000/image.png")override;
+    void RenderOffScreenInMemory();
     virtual bool LoadPcdFile(const std::string&)override;
     virtual std::string GetVersion()const override{return "1.0";}
     virtual void MoveCamera(double _shiftX,double _shiftY)override;
@@ -51,5 +52,6 @@ private:
 
      int m_width=640;
      int m_height=480;
+     int curr=1;
 };
 

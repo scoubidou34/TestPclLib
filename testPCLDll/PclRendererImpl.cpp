@@ -9,13 +9,15 @@
 #include <vtkActor.h>
 #include <vtkCamera.h>
 #include <vtkPNGWriter.h>
+#include <vtkBMPWriter.h>
+#include <vtkJPEGWriter.h>
 #include <vtkWindowToImageFilter.h> 
 #include <vtkRenderLargeImage.h>
 
 #include <vtkRenderWindowInteractor.h>
 
 
- 
+ #include <chrono>
   
 
 bool PclRendererImpl::LoadPcdFile( const std::string& _file)
@@ -76,6 +78,7 @@ bool PclRendererImpl::InitRenderer()
     // renderer->GetActiveCamera()->Dolly(1.4);
     m_renderer->ResetCameraClippingRange();
     m_renderer->SetBackground(.3, .4, .5);
+    return true;
 }
 
 void PclRendererImpl::Render()
@@ -90,6 +93,15 @@ void PclRendererImpl::Render()
 
 void PclRendererImpl::RenderOffScreen(const std::string& _imgName)
 {
+#if 0
+    (curr%99==0) ? curr=1 :curr++;
+    auto strCmd(std::string("cp -T /home/tom/Documents/tempPng/image")+std::to_string(curr)+std::string(".png  /run/user/1000/image.png"));
+    if (!std::system(strCmd.c_str()))
+        cerr<<"error"<<std::endl;
+    return;
+    #endif
+    //RenderOffScreenInMemory();
+    //return;
     m_renderWindow->SetSize(m_width, m_height);
     m_renderWindow->SetOffScreenRendering(1);
    /* vtkSmartPointer<vtkRenderLargeImage> renderLarge = vtkSmartPointer<vtkRenderLargeImage>::New();
@@ -98,23 +110,57 @@ void PclRendererImpl::RenderOffScreen(const std::string& _imgName)
     vtkSmartPointer<vtkWindowToImageFilter> renderLarge = vtkSmartPointer<vtkWindowToImageFilter>::New();
     renderLarge->SetInput(m_renderWindow);
     
-    vtkSmartPointer<vtkPNGWriter> pImageWriter = vtkSmartPointer<vtkPNGWriter>::New();
+    vtkSmartPointer<vtkBMPWriter> pImageWriter = vtkSmartPointer<vtkBMPWriter>::New();
     //pImageWriter->SetInput(pWindowImageFilter->GetOutput());
+    //pImageWriter->SetWriteToMemory(1);
     pImageWriter->SetFileName(_imgName.c_str());
+  //  pImageWriter->SetQuality	(50)	;
+
     pImageWriter->SetInputConnection(renderLarge->GetOutputPort());
-    pImageWriter->Write();
+   pImageWriter->Write();
 }
 
+void PclRendererImpl::RenderOffScreenInMemory()
+{
+    m_renderWindow->SetSize(m_width, m_height);
+    m_renderWindow->SetOffScreenRendering(1);
+   /* vtkSmartPointer<vtkRenderLargeImage> renderLarge = vtkSmartPointer<vtkRenderLargeImage>::New();
+    renderLarge->SetInput(m_renderer);
+     * */
+    vtkSmartPointer<vtkWindowToImageFilter> renderLarge = vtkSmartPointer<vtkWindowToImageFilter>::New();
+    renderLarge->SetInput(m_renderWindow);
+    
+    vtkSmartPointer<vtkJPEGWriter> pImageWriter = vtkSmartPointer<vtkJPEGWriter>::New();
+    //pImageWriter->SetInput(pWindowImageFilter->GetOutput());
+    pImageWriter->SetInputConnection(renderLarge->GetOutputPort());
+   // pImageWriter->SetWriteToMemory(1);
+    pImageWriter->SetFileName("/home/tom/toto1.png");
+    pImageWriter->Write();
+   // auto res(pImageWriter->GetResult());
+    //std::cout<<res->GetNumberOfTuples	(	)<<std::endl;
+    
+    
+}
+
+
 void PclRendererImpl::MoveCamera(double _shiftX,double _shiftY){
+    auto start = std::chrono::steady_clock::now();
     vtkCamera *ptrCamera=m_renderer->GetActiveCamera ();
     assert(ptrCamera);
-    double pos[3];
-    ptrCamera->GetPosition(pos);
+    //double pos[3];
+    //auto roll(ptrCamera->GetRoll());
+    //roll+=_shiftX;
+    /*ptrCamera->GetPosition(pos);
     std::cout<<pos[0]<<" "<<pos[1]<<" "<<pos[2]<<std::endl;
     pos[0]+=_shiftX;
-    pos[1]+=_shiftY;
-    ptrCamera->Roll(pos[0]);
-    ptrCamera->Yaw(0);
-    RenderOffScreen();
-    //return true;
+    pos[1]+=_shiftY;*/
+    std::cout<<_shiftX<<"   "<<_shiftY<<std::endl;
+    ptrCamera->Roll(_shiftX);
+    ptrCamera->Yaw(_shiftY);
+   RenderOffScreen();
+    
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
 }

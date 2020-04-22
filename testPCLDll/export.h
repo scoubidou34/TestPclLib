@@ -9,7 +9,7 @@ extern "C" {
 struct PclRendererInterface {
 public:
     virtual void Render() = 0;
-    virtual void RenderOffScreen(const std::string& _imgName="image.png") = 0;
+    virtual void RenderOffScreen(const std::string& _imgName="/run/user/1000/image.png") = 0;
     virtual bool LoadPcdFile(const std::string&) = 0;    
     virtual std::string GetVersion()const=0;
     virtual void MoveCamera(double _shiftX,double _shiftY)=0;
