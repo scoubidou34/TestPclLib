@@ -116,15 +116,27 @@ void PclRendererImpl::Render()
     interactor->Start();
 }
 
-bool PclRendererImpl::_CompressToJpeg(const std::string& _imgPath)const{
+bool PclRendererImpl::_CompressToJpeg(const std::string& _imgPath,const vtkUnsignedCharArray* _data)const{
+    
+    assert(data);
     
     const int JPEG_QUALITY = 85;
     const int COLOR_COMPONENTS = 3;
     long unsigned int _jpegSize = 0;
     unsigned char* _compressedImage = nullptr;
-    unsigned char* buffer = nullptr;
  
-    {
+ /*{
+        ofstream myfile;
+        myfile.open(_imgPath+"image.bmp", ios::out);
+        if (!myfile.is_open()){
+            std::cout<<"Error writing";
+            return false;
+        }
+        myfile.write(reinterpret_cast<const char*>(const_cast<vtkUnsignedCharArray*>(_data)->GetPointer(0)), const_cast<vtkUnsignedCharArray*>(_data)->GetNumberOfValues());
+        myfile.close();
+    }*/
+    
+   /* {
         ifstream myfile;
         myfile.open(_imgPath+"image.bmp", ios::binary);
         if(!myfile.is_open()) {
@@ -136,14 +148,15 @@ bool PclRendererImpl::_CompressToJpeg(const std::string& _imgPath)const{
         buffer = new unsigned char[sizeF];
         myfile.read(reinterpret_cast<char*>(buffer), sizeF);
         myfile.close();
-    }
+    }*/
 
+    const unsigned int BMP_DATA_OFFSET=53;
     tjhandle _jpegCompressor = tjInitCompress();
 
-    tjCompress2(_jpegCompressor, buffer, m_width, 0, m_height, TJPF_RGB, &_compressedImage, &_jpegSize, TJSAMP_444,
+    tjCompress2(_jpegCompressor, const_cast<vtkUnsignedCharArray*>(_data)->GetPointer(BMP_DATA_OFFSET), m_width, 0, m_height, TJPF_RGB, &_compressedImage, &_jpegSize, TJSAMP_444,
         JPEG_QUALITY, TJFLAG_FASTDCT | TJFLAG_BOTTOMUP);
 
-    delete[] buffer;
+    //delete[] buffer;
     
     {
         ofstream myfile;
@@ -178,36 +191,23 @@ void PclRendererImpl::RenderOffScreen(const std::string& _imgName)
       * */
     vtkSmartPointer<vtkWindowToImageFilter> renderLarge = vtkSmartPointer<vtkWindowToImageFilter>::New();
     renderLarge->SetInput(m_renderWindow);
-    {
+    
         vtkSmartPointer<vtkBMPWriter> pImageWriter = vtkSmartPointer<vtkBMPWriter>::New();
         // pImageWriter->SetInput(pWindowImageFilter->GetOutput());
-        // pImageWriter->SetWriteToMemory(1);
+        pImageWriter->SetWriteToMemory(1);
         pImageWriter->SetFileName((_imgName+std::string("image.bmp")).c_str());
         //  pImageWriter->SetQuality	(50)	;
 
         pImageWriter->SetInputConnection(renderLarge->GetOutputPort());
         pImageWriter->Write();
-    }
-    _CompressToJpeg(_imgName);
+       auto res(pImageWriter->GetResult());
+    /*   res->Print(std::cout);
+       std::cout<<res->GetNumberOfValues () ;*/
+
+    _CompressToJpeg(_imgName,res);
 }
 
-void PclRendererImpl::RenderOffScreenInMemory()
-{
-    m_renderWindow->SetSize(m_width, m_height);
-    m_renderWindow->SetOffScreenRendering(1);
 
-    vtkSmartPointer<vtkWindowToImageFilter> renderLarge = vtkSmartPointer<vtkWindowToImageFilter>::New();
-    renderLarge->SetInput(m_renderWindow);
-
-    vtkSmartPointer<vtkJPEGWriter> pImageWriter = vtkSmartPointer<vtkJPEGWriter>::New();
-    // pImageWriter->SetInput(pWindowImageFilter->GetOutput());
-    pImageWriter->SetInputConnection(renderLarge->GetOutputPort());
-    // pImageWriter->SetWriteToMemory(1);
-    pImageWriter->SetFileName("/home/tom/toto1.png");
-    pImageWriter->Write();
-    // auto res(pImageWriter->GetResult());
-    // std::cout<<res->GetNumberOfTuples	(	)<<std::endl;
-}
 
 void PclRendererImpl::RPYCamera(double _R, double _P, double _Y)
 {
