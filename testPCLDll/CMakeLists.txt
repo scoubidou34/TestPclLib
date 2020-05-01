@@ -51,7 +51,7 @@ include(${VTK_USE_FILE})
 
 include_directories(
 ${PCL_INCLUDE_DIRS}
-
+/usr/include/libjpeg-turbo/include/
 )
 
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
@@ -89,7 +89,10 @@ set ( CXX_SRCS
 )
 
 
-
+set ( JPEGTURBOLIB 
+    /usr/local/lib/libjpeg.so
+    /usr/local/lib/libturbojpeg.so
+)
 
 
 
@@ -97,12 +100,12 @@ set ( CXX_SRCS
 # Place your code here
 #}}}}
 
-add_library(testPCLDll SHARED ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
+add_library(testPCLDll SHARED ${RC_SRCS} ${CXX_SRCS} ${C_SRCS} )
 target_link_libraries(testPCLDll ${LINK_OPTIONS})
 target_link_libraries(testPCLDll ${Boost_LIBRARIES})
 target_link_libraries (testPCLDll ${PCL_LIBRARIES})
 target_link_libraries (testPCLDll ${VTK_LIBRARIES})
-
+target_link_libraries (testPCLDll ${JPEGTURBOLIB})
 #{{{{ User Code 3
 # Place your code here
 #}}}}

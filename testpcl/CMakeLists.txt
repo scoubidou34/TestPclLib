@@ -57,14 +57,19 @@ link_directories(
     ${CL_OUTPUT_DIRECTORY}    
    
 )
+
+set ( JPEGTURBOLIB 
+    /usr/local/lib/libjpeg.so
+    /usr/local/lib/libturbojpeg.so
+)
+
 add_definitions(${PCL_DEFINITIONS})
 
 add_executable (testpcl src/main.cpp)
 target_link_libraries (testpcl ${PCL_LIBRARIES})
 target_link_libraries (testpcl testPCLDll)
 target_link_libraries (testpcl ${VTK_LIBRARIES})
-
-
+target_link_libraries (testpcl ${JPEGTURBOLIB})
 # Linker options
 #target_link_libraries (testpcl ${Boost_LIBRARIES})
 

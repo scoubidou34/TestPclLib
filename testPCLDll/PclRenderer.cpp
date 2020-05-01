@@ -41,8 +41,14 @@ void RenderOffScreen(PclRendererInterface* _obj){
     
 }
 
-void MoveCamera(PclRendererInterface* _obj,double _x,double _y){
-    _obj->MoveCamera(_x,_y);
+void MoveCamera(PclRendererInterface* _obj,double _x,double _y,double _z){
+    _obj->MoveCamera(_x,_y,_z);
 }
  
+ void RPYCamera(PclRendererInterface* _obj,double _R,double _P,double _Y){
+    _obj->RPYCamera(_R,_P,_Y);
+}
  
+ void ZoomCamera(PclRendererInterface* _obj,double _scale){
+     _obj->ZoomCamera(_scale);
+ }
