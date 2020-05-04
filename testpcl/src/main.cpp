@@ -11,9 +11,11 @@ int main(int argc, char** argv)
 
     //  void* handle = dlopen("myclass.so", RTLD_LAZY);
     PclRendererInterface* pclPtr(Init());
-    pclPtr->LoadPcdFile("rops_cloud.pcd");
+   LoadPcdFile(pclPtr,"rops_cloud.pcd");
+   CreatePointsCloud(pclPtr);
+   CreateMeshing(pclPtr);
+   Render(pclPtr);
 
-    pclPtr->RenderOffScreen();
     Destroy(pclPtr);
     return (0);
 }
